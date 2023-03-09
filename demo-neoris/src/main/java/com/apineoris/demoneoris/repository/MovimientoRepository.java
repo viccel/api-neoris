@@ -11,8 +11,7 @@ import java.util.List;
 
 @Repository
 public interface MovimientoRepository extends JpaRepository<Movimiento, Long> {
-
-    @Query("SELECT m FROM Movimientos m WHERE m.fecha BETWEEN :startDate AND :endDate")
+    @Query("SELECT m FROM Movimiento m WHERE m.fecha BETWEEN :startDate AND :endDate")
     List<Movimiento> getReporte(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 
