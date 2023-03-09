@@ -1,0 +1,10 @@
+create table clientes (id_cliente bigint not null, contrasena varchar(255), direccion varchar(255), edad integer not null, estado varchar(255), genero char(1) not null, nombre varchar(255), telefono varchar(255), primary key (id_cliente)) engine=InnoDB;
+create table cuentas (numero_cuenta bigint not null auto_increment, estado varchar(255), saldo_inicial double precision, tipo_cuenta varchar(255), id_cliente bigint, primary key (numero_cuenta)) engine=InnoDB;
+create table hibernate_sequences (sequence_name varchar(255) not null, next_val bigint, primary key (sequence_name)) engine=InnoDB;
+insert into hibernate_sequences(sequence_name, next_val) values ('default',0);
+insert into hibernate_sequences(sequence_name, next_val) values ('default',0);
+create table movimientos (id_movimiento bigint not null auto_increment, fecha date, saldo double precision, tipo_movimiento varchar(255), valor double precision, cliente_id bigint, cuenta_id bigint, primary key (id_movimiento)) engine=InnoDB;
+create table persona (identificacion bigint not null, direccion varchar(255), edad integer not null, genero char(1) not null, nombre varchar(255), telefono varchar(255), primary key (identificacion)) engine=InnoDB;
+alter table cuentas add constraint FKl7qjco9qn0mai4bxjxee01vwr foreign key (id_cliente) references clientes (id_cliente);
+alter table movimientos add constraint FKdu4l5tx20ok9p4v5jjpgqs9e foreign key (cliente_id) references clientes (id_cliente);
+alter table movimientos add constraint FK4moe88hxuohcysas5h70mdc09 foreign key (cuenta_id) references cuentas (numero_cuenta);

@@ -1,5 +1,6 @@
 package com.apineoris.demoneoris.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class MovimientoDto {
@@ -7,12 +8,12 @@ public class MovimientoDto {
     private String tipoMovimiento;
     private double valor;
     private double saldo;
-    private Date fecha;
+    private LocalDate fecha;
 
     public MovimientoDto() {
     }
 
-    public MovimientoDto(long movimientoId, String tipoMovimiento, double valor, double saldo, Date fecha) {
+    public MovimientoDto(long movimientoId, String tipoMovimiento, double valor, double saldo, LocalDate fecha) {
         this.movimientoId = movimientoId;
         this.tipoMovimiento = tipoMovimiento;
         this.valor = valor;
@@ -52,11 +53,11 @@ public class MovimientoDto {
         this.saldo = saldo;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 }

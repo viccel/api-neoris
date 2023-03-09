@@ -3,6 +3,7 @@ package com.apineoris.demoneoris.entity;
 import com.apineoris.demoneoris.dto.MovimientoDto;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,7 +21,7 @@ public class Movimiento {
     @Column(name = "saldo")
     private double saldo;
     @Column(name = "fecha")
-    private Date fecha;
+    private LocalDate fecha;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cuenta_id")
@@ -30,7 +31,7 @@ public class Movimiento {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    public Movimiento(long movimientoId, String tipoMovimiento, double valor, double saldo, Date fecha) {
+    public Movimiento(long movimientoId, String tipoMovimiento, double valor, double saldo, LocalDate fecha) {
         this.movimientoId = movimientoId;
         this.tipoMovimiento = tipoMovimiento;
         this.valor = valor;
@@ -89,11 +90,11 @@ public class Movimiento {
         this.saldo = saldo;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
