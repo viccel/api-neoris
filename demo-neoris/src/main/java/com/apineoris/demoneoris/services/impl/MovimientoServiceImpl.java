@@ -1,7 +1,6 @@
 package com.apineoris.demoneoris.services.impl;
 
 import com.apineoris.demoneoris.dto.MovimientoDto;
-import com.apineoris.demoneoris.entity.Cliente;
 import com.apineoris.demoneoris.entity.Cuenta;
 import com.apineoris.demoneoris.entity.Movimiento;
 import com.apineoris.demoneoris.repository.ClienteRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,47 +34,6 @@ public class MovimientoServiceImpl implements MovimientoService {
     public List<MovimientoDto> getAllMovimientos() {
 
         List<MovimientoDto> emptyList = new ArrayList<>();
-        Optional<List<Movimiento>> optMovimientos = Optional.of(repository.findAll());
-
-        if (optMovimientos.isPresent()) {
-            List<Movimiento> movimientos = optMovimientos.get();
-            List<MovimientoDto> movimientoDtos = movimientos.stream()
-                    .map(movimiento -> {
-
-                                Cliente cliente = movimiento.getCliente();
-                                Cuenta cuenta = movimiento.getCuenta();
-
-                                if (cliente != null && cuenta != null) {
-                                    long idCliente = cliente.getIdCliente();
-
-                                    Optional<Cliente> optionalCliente = clienteRepository.findById(idCliente);
-
-                                    if (optionalCliente.isPresent()) {
-                                        long idCuenta = cuenta.getNumeroCuenta();
-                                        Optional<Cuenta> optionalCuenta = cuentaRepository.findById(idCuenta);
-
-                                        if (optionalCuenta.isPresent()) {
-                                            Cuenta cta = optionalCuenta.get();
-
-                                            if (cta.getCliente().getIdCliente() == idCliente) {
-                                                return movimiento.toDto();
-                                            }
-
-                                        }
-
-                                    }
-
-                                }
-                                return null;
-                            }
-                    ).collect(Collectors.toList());
-
-            movimientoDtos = movimientoDtos.stream().filter(cta -> cta != null).collect(Collectors.toList());
-
-            return movimientoDtos;
-        } else {
-            log.warn("No se obtuvieron los movimientos");
-        }
 
         return emptyList;
     }
@@ -84,42 +41,24 @@ public class MovimientoServiceImpl implements MovimientoService {
     @Override
     public MovimientoDto saveNewMovimiento(Movimiento movimiento) {
 
-        if (movimiento != null) {
+        Cuenta cuenta = movimiento.getCuenta();
 
-            Cliente cliente = movimiento.getCliente();
+        if (cuenta != null) {
+            long numeroCuenta = cuenta.getNumeroCuenta();
 
-            if (cliente != null) {
+            Optional<Cuenta> optionalCuenta = cuentaRepository.findById(numeroCuenta);
 
-                Optional<Cliente> clienteOptional = clienteRepository.findById(cliente.getIdCliente());
+            if (optionalCuenta.isPresent()) {
 
-                if (clienteOptional.isPresent()) {
-                    Cuenta cuenta = movimiento.getCuenta();
+                Movimiento savedMovimiento = repository.save(movimiento);
+                return savedMovimiento.toDto();
 
-                    if (cuenta != null) {
-                        long numeroCuenta = cuenta.getNumeroCuenta();
-                        Optional<Cuenta> optionalCuenta = cuentaRepository.findById(numeroCuenta);
-
-                        if (optionalCuenta.isPresent()) {
-                            repository.save(movimiento);
-                            log.info("Movimiento guardado.");
-                        } else {
-                            log.warn("No existe cuenta: {}", numeroCuenta);
-                        }
-
-                    }
-                } else {
-                    log.warn("No existe el cliente con id: {}", cliente.getIdCliente());
-                }
-
-
+            } else {
+                log.warn("No se encontró cuenta relacionada al número de cuenta: {}", numeroCuenta);
             }
 
-            MovimientoDto movimientoDto = movimiento.toDto();
-
-            return movimientoDto;
-
         } else {
-            log.warn("No se pudo guardar el movimiento.");
+            log.warn("No hay cuenta asociada al movimiento, no se puede realizar el movimiento.");
         }
 
         return null;

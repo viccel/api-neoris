@@ -27,8 +27,15 @@ public class MovimientoController {
     }
 
     @GetMapping(value = "/{id}")
-    public MovimientoDto getMovimientoById(@PathVariable(name = "id") long id) {
-        return service.getMovimientoById(id);
+    public ResponseEntity<MovimientoDto> getMovimientoById(@PathVariable(name = "id") long id) {
+
+        MovimientoDto movimientoDto = service.getMovimientoById(id);
+
+        if (movimientoDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(movimientoDto);
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
@@ -52,8 +59,10 @@ public class MovimientoController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<List<MovimientoDto>> getReporte(@RequestParam(value = "inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate inicio,
-                                                          @RequestParam(value = "fin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate fin) {
+    public ResponseEntity<List<MovimientoDto>> getReporte(@RequestParam(value = "inicio")
+                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate inicio,
+                                                          @RequestParam(value = "fin")
+                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate fin) {
         List<MovimientoDto> reporte = service.getReporte(inicio, fin);
         return ResponseEntity.ok(reporte);
     }

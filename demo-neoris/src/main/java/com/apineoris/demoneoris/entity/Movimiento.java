@@ -27,9 +27,9 @@ public class Movimiento {
     @JoinColumn(name = "cuenta_id")
     private Cuenta cuenta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    private Cliente cliente;*/
 
     public Movimiento(long movimientoId, String tipoMovimiento, double valor, double saldo, LocalDate fecha) {
         this.movimientoId = movimientoId;
@@ -48,14 +48,6 @@ public class Movimiento {
 
     public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
     }
 
     public long getMovimientoId() {
