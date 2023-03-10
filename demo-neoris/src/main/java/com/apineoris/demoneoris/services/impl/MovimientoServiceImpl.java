@@ -33,9 +33,11 @@ public class MovimientoServiceImpl implements MovimientoService {
     @Override
     public List<MovimientoDto> getAllMovimientos() {
 
-        List<MovimientoDto> emptyList = new ArrayList<>();
+        List<Movimiento> movimientos = repository.findAll();
+        List<MovimientoDto> movimientoDtos = movimientos.stream()
+                .map(movimiento -> movimiento.toDto()).collect(Collectors.toList());
 
-        return emptyList;
+        return movimientoDtos;
     }
 
     @Override

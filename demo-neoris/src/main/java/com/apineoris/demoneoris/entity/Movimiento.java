@@ -4,12 +4,10 @@ import com.apineoris.demoneoris.dto.MovimientoDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "movimientos")
 public class Movimiento {
-    //Fecha, tipo movimiento, valor, saldo
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_movimiento")
