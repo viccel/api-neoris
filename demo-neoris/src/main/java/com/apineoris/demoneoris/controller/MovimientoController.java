@@ -51,8 +51,15 @@ public class MovimientoController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public MovimientoDto deleteById(@PathVariable(name = "id") long id) {
-        return service.deleteMovimientoById(id);
+    public ResponseEntity<MovimientoDto> deleteById(@PathVariable(name = "id") long id) {
+
+        MovimientoDto movimientoDto = service.deleteMovimientoById(id);
+
+        if (movimientoDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(movimientoDto);
     }
 
     @GetMapping("/report")
