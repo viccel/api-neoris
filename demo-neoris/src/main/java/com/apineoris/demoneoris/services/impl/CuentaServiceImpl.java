@@ -61,19 +61,20 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
-    public CuentaDto saveNewCliente(Cuenta cuenta) {
+    public CuentaDto saveNewCuenta(Cuenta cuenta) {
 
         if (cuenta.getCliente() != null) {
 
             Optional<Cliente> optionalCliente = clienteRepository.findById(cuenta.getCliente().getIdCliente());
 
             if (optionalCliente.isPresent()) {
+                cuenta.setSaldoActual(cuenta.getSaldoInicial());
                 Optional<Cuenta> optionalCuenta = Optional.of(repository.save(cuenta));
 
                 if (optionalCuenta.isPresent()) {
                     Cliente cliente = optionalCliente.get();
                     Cuenta cta = optionalCuenta.get();
-                    CuentaDto cuentaDto = new CuentaDto(cta.getNumeroCuenta(), cta.getTipoCuenta(), cta.getSaldoInicial(),
+                    CuentaDto cuentaDto = new CuentaDto(cta.getNumeroCuenta(), cta.getTipoCuenta().getDescripcion(), cta.getSaldoInicial(),
                             cta.getEstado(), cliente.getNombre());
                     return cuentaDto;
                 }
@@ -105,7 +106,7 @@ public class CuentaServiceImpl implements CuentaService {
                 log.warn("La cuenta con id: {}, no tiene un cliente", id);
             }
 
-        }else {
+        } else {
             log.warn("La cuenta con id: {}, no encontrada", id);
         }
 

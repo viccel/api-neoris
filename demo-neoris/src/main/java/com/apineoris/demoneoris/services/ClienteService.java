@@ -2,10 +2,12 @@ package com.apineoris.demoneoris.services;
 
 import com.apineoris.demoneoris.dto.ClienteDto;
 import com.apineoris.demoneoris.entity.Cliente;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
+@Service
 public interface ClienteService {
     List<ClienteDto> getAllClientes();
 

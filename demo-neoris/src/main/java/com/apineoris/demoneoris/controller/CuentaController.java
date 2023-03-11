@@ -6,7 +6,6 @@ import com.apineoris.demoneoris.services.CuentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class CuentaController {
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
     public ResponseEntity<CuentaDto> saveNewCuenta(@RequestBody Cuenta cuenta) {
-        CuentaDto cuentaDto = service.saveNewCliente(cuenta);
+        CuentaDto cuentaDto = service.saveNewCuenta(cuenta);
 
         if (cuentaDto == null) {
             return ResponseEntity.notFound().build();

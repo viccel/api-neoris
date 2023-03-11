@@ -3,6 +3,7 @@ package com.apineoris.demoneoris.services.impl;
 import com.apineoris.demoneoris.dto.MovimientoDto;
 import com.apineoris.demoneoris.entity.Cuenta;
 import com.apineoris.demoneoris.entity.Movimiento;
+import com.apineoris.demoneoris.entity.enums.TipoMovimiento;
 import com.apineoris.demoneoris.repository.ClienteRepository;
 import com.apineoris.demoneoris.repository.CuentaRepository;
 import com.apineoris.demoneoris.repository.MovimientoRepository;
@@ -50,8 +51,55 @@ public class MovimientoServiceImpl implements MovimientoService {
 
             if (optionalCuenta.isPresent()) {
 
-                Movimiento savedMovimiento = repository.save(movimiento);
-                return savedMovimiento.toDto();
+                if (movimiento.getValor() > 0) {
+
+                    Cuenta upCta = optionalCuenta.get();
+
+                    if (movimiento.getTipoMovimiento() == TipoMovimiento.DEPOSITO) {
+                        if (movimiento.getValor() > 0) {
+
+                            double saldoActualizado = upCta.getSaldoInicial() + movimiento.getValor();
+                            upCta.setSaldoActual(saldoActualizado);
+                            movimiento.setSaldo(saldoActualizado);
+                            Movimiento savedMovimiento = repository.save(movimiento);
+                            Cuenta updatedCuenta = cuentaRepository.save(upCta);
+
+                            if (updatedCuenta != null) {
+                                log.info("Saldo de la cuenta: {}, ha sido actualizado", updatedCuenta.getNumeroCuenta());
+                                return savedMovimiento.toDto();
+                            }
+
+                        } else {
+                            log.warn("No se puede depositar $0 o menos, importe: {}", movimiento.getValor());
+                        }
+                    }
+
+                    if (movimiento.getTipoMovimiento() == TipoMovimiento.RETIRO) {
+
+                        if (upCta.getSaldoActual() > 0) {
+                            if (upCta.getSaldoActual() >= movimiento.getValor()) {
+
+                                double saldoActualizado = upCta.getSaldoActual() - movimiento.getValor();
+
+                                upCta.setSaldoActual(saldoActualizado);
+                                movimiento.setSaldo(saldoActualizado);
+                                Movimiento savedMovimiento = repository.save(movimiento);
+
+                                if (savedMovimiento != null) {
+                                    cuentaRepository.save(upCta);
+                                }
+
+                                return savedMovimiento.toDto();
+
+                            } else {
+                                log.warn("No dispones de dinero suficiente en tu cuenta con id: {}", upCta.getNumeroCuenta());
+                            }
+                        } else {
+                            log.warn("No dispones de dinero en tu cuenta con id: {}", upCta.getNumeroCuenta());
+                        }
+
+                    }
+                }
 
             } else {
                 log.warn("No se encontró cuenta relacionada al número de cuenta: {}", numeroCuenta);
@@ -122,11 +170,6 @@ public class MovimientoServiceImpl implements MovimientoService {
 
         List<Movimiento> reporte = repository.getReporte(fechaIni, fechaFin);
         List<MovimientoDto> movimientoDtos = reporte.stream().map(r -> r.toDto()).collect(Collectors.toList());
-
-        /* SE DEJA LA OPCIÓN DE OBTNER LOS DATOS FILTRADOS DESDE LA BD; MEJOR PERFORMANCE Y MENOR USO Y TRÁFICO DE DATOS*/
-        /*List<Movimiento> movimientos = repository.findAll().stream().filter(movimiento -> movimiento.getFecha().compareTo(fechaIni) >= 0 &&
-                movimiento.getFecha().compareTo(fechaFin) <= 0).collect(Collectors.toList());
-        List<MovimientoDto> movimientoDtos = movimientos.stream().map(movimiento -> movimiento.toDto()).collect(Collectors.toList());*/
 
         return movimientoDtos;
     }

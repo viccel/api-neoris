@@ -1,6 +1,7 @@
 package com.apineoris.demoneoris.entity;
 
 import com.apineoris.demoneoris.dto.MovimientoDto;
+import com.apineoris.demoneoris.entity.enums.TipoMovimiento;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class Movimiento {
     @Column(name = "id_movimiento")
     private long movimientoId;
     @Column(name = "tipo_movimiento")
-    private String tipoMovimiento;
+    private TipoMovimiento tipoMovimiento;
     @Column(name = "valor")
     private double valor;
     @Column(name = "saldo")
@@ -29,7 +30,7 @@ public class Movimiento {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;*/
 
-    public Movimiento(long movimientoId, String tipoMovimiento, double valor, double saldo, LocalDate fecha) {
+    public Movimiento(long movimientoId, TipoMovimiento tipoMovimiento, double valor, double saldo, LocalDate fecha) {
         this.movimientoId = movimientoId;
         this.tipoMovimiento = tipoMovimiento;
         this.valor = valor;
@@ -56,11 +57,11 @@ public class Movimiento {
         this.movimientoId = movimientoId;
     }
 
-    public String getTipoMovimiento() {
+    public TipoMovimiento getTipoMovimiento() {
         return tipoMovimiento;
     }
 
-    public void setTipoMovimiento(String tipoMovimiento) {
+    public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
     }
 
@@ -89,6 +90,6 @@ public class Movimiento {
     }
 
     public MovimientoDto toDto() {
-        return new MovimientoDto(getMovimientoId(), getTipoMovimiento(), getValor(), getSaldo(), getFecha());
+        return new MovimientoDto(getMovimientoId(), getTipoMovimiento().getDescripcion(), getValor(), getSaldo(), getFecha());
     }
 }
