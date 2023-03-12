@@ -62,12 +62,13 @@ public class MovimientoController {
         return ResponseEntity.ok(movimientoDto);
     }
 
-    @GetMapping("/report")
-    public ResponseEntity<List<MovimientoDto>> getReporte(@RequestParam(value = "inicio")
+    @GetMapping("/report/id-cliente/{id}")
+    public ResponseEntity<List<MovimientoDto>> getReporte(@PathVariable(name = "id") long id,
+                                                          @RequestParam(value = "inicio")
                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate inicio,
                                                           @RequestParam(value = "fin")
                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate fin) {
-        List<MovimientoDto> reporte = service.getReporte(inicio, fin);
+        List<MovimientoDto> reporte = service.getReporte(id, inicio, fin);
         return ResponseEntity.ok(reporte);
     }
 

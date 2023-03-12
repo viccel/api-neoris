@@ -23,7 +23,7 @@ public class Movimiento {
     private LocalDate fecha;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cuenta_id")
+    @JoinColumn(name = "numero_cuenta")
     private Cuenta cuenta;
 
     /*@ManyToOne(fetch = FetchType.LAZY)

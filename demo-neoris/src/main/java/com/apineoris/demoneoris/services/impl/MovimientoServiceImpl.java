@@ -164,10 +164,12 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     @Override
-    public List<MovimientoDto> getReporte(LocalDate fechaIni, LocalDate fechaFin) {
+    public List<MovimientoDto> getReporte(final long id, final LocalDate fechaIni, final LocalDate fechaFin) {
 
         List<Movimiento> reporte = repository.getReporte(fechaIni, fechaFin);
-        List<MovimientoDto> movimientoDtos = reporte.stream().map(r -> r.toDto()).collect(Collectors.toList());
+        List<Movimiento> clientMovs = reporte.stream().filter(movimiento -> movimiento.getCuenta().getCliente()
+                .getIdCliente() == id).collect(Collectors.toList());
+        List<MovimientoDto> movimientoDtos = clientMovs.stream().map(r -> r.toDto()).collect(Collectors.toList());
 
         return movimientoDtos;
     }
